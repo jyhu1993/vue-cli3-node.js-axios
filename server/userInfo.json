@@ -1,0 +1,68 @@
+{
+	"users": [
+		{
+			"user": "5",
+			"password": "1"
+		},
+		{
+			"user": "hujingyuan",
+			"password": "123"
+		},
+		{
+			"user": "huzi",
+			"password": "456"
+		},
+		{
+			"user": "huziing",
+			"password": "456"
+		},
+		{
+			"user": "456",
+			"password": "12345"
+		},
+		{
+			"user": "4567",
+			"password": "123"
+		},
+		{
+			"user": "d",
+			"password": "3"
+		},
+		{
+			"user": "9",
+			"password": "2"
+		},
+		{
+			"user": "10",
+			"password": "2"
+		},
+		{
+			"user": "90",
+			"password": "0"
+		},
+		{
+			"user": "3",
+			"password": "2"
+		},
+		{
+			"user": "30",
+			"password": "2"
+		},
+		{
+			"user": "09",
+			"password": "1"
+		},
+		{
+			"user": "hujing",
+			"password": "345"
+		},
+		{
+			"user": "w",
+			"password": "w"
+		},
+		{
+			"user": "jingyuan",
+			"password": "123"
+		}
+	]
+}
