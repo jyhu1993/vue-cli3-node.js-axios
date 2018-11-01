@@ -33,17 +33,22 @@
           // xhr.setRequestHeader("content-type","application/json")
           xhr.setRequestHeader("content-type","application/x-www-form-urlencoded")
           xhr.send(`user=${this.user.userName}&password=${this.user.password}`)
-          this.user.password = ''
-          this.user.userName = ''
+
+          var that = this
           xhr.onreadystatechange = function () {
             if (xhr.readyState === 4 && xhr.status === 200) {
               let result = xhr.responseText
               switch(result){
                 case 'false':
+                that.user.password = ''
+                that.user.userName = ''
                 alert('用户名或密码错误')
                 break;
                 case 'true':
-                window.location = '/home'
+                // 通过store记录当前用户名;token作为判断是否登录的标志；
+                that.$store.state.token = true
+                that.$store.state.userName = that.user.userName
+                that.$router.push('/home')
                 break;
               }
             }
@@ -52,14 +57,14 @@
       }
     }
   }
-
-
 </script>
 <style type="text/css" lang="less">
   .login{
     display: inline-block;
     background: #1b9095;
     padding:0 30px;
+    border-radius: 5px;
+    box-shadow: 10px 10px 5px #eee;
     .item{  
       margin:30px 0;
       label{

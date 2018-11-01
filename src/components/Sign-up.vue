@@ -68,6 +68,8 @@
     display: inline-block;
     background: #1b9095;
     padding:0 30px;
+    border-radius: 5px;
+    box-shadow: 10px 10px 5px #eee;
     .item{  
       margin:30px 0;
       label{
