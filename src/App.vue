@@ -9,9 +9,8 @@
 </script>
 
 <style lang="less">
+@import url('./assets/styles/global.less');
 body,html{
-  margin:0;
-  padding:0;
   height: 100%;
   font-size: 16px;
 }
