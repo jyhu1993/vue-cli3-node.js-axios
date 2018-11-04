@@ -14,54 +14,54 @@
     </div>
     <div class="item">
       <button @click='signUp' class="signUp-btn" type="submit">注册</button>
-    </div> 
+    </div>
   </form>
 </template>
 <script>
-  export default {
-    data () {
-      return {
-        user:{
-          userName: '',
-          password: ''
-        },
-        passwordConfirm:''
-      }
-    },
-    methods:{
-      signUp (event) {
-        if (this.user.password != this.passwordConfirm) {
-          alert('两次密码不同，请重新输入')
-          event.preventDefault()
-        }else if ((this.user.password != '') && (this.passwordConfirm != '')) {
-          event.preventDefault()
-          let xhr = new XMLHttpRequest()
-          xhr.open('post','http://localhost:1234/signUp', true)
-          xhr.setRequestHeader('Content-type',"application/x-www-form-urlencoded")
-          xhr.send(`user=${this.user.userName}&password=${this.user.password}`)
-          this.user.password = ''
-          this.user.userName = ''
-          this.passwordConfirm = ''
-          xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-              let content = xhr.responseText
-              switch (content) {
-                case 'true': 
+export default {
+  data () {
+    return {
+      user: {
+        userName: '',
+        password: ''
+      },
+      passwordConfirm: ''
+    }
+  },
+  methods: {
+    signUp (event) {
+      if (this.user.password !== this.passwordConfirm) {
+        alert('两次密码不同，请重新输入')
+        event.preventDefault()
+      } else if ((this.user.password !== '') && (this.passwordConfirm !== '')) {
+        event.preventDefault()
+        let xhr = new XMLHttpRequest()
+        xhr.open('post', 'http://192.168.43.32:1234/signUp', true)
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+        xhr.send(`user=${this.user.userName}&password=${this.user.password}`)
+        this.user.password = ''
+        this.user.userName = ''
+        this.passwordConfirm = ''
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            let content = xhr.responseText
+            switch (content) {
+              case 'true':
                 alert('注册成功，请登录')
-                break;
-                case 'false':
+                break
+              case 'false':
                 alert('用户名已存在，请重新注册')
-                break;
-              }
+                break
             }
           }
         }
-      },
-      loginIn (event) {
-        
       }
+    },
+    loginIn (event) {
+
     }
   }
+}
 </script>
 <style scoped lang="less">
   .sign-up{
@@ -70,7 +70,7 @@
     padding:0 30px;
     border-radius: 5px;
     box-shadow: 10px 10px 5px #eee;
-    .item{  
+    .item{
       margin:30px 0;
       label{
         display: inline-block;

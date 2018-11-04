@@ -11,9 +11,9 @@
   </div>
 </template>
 <script>
-  export default {
+export default {
 
-  }
+}
 </script>
 <style lang="less" scoped>
   .login-page{
@@ -49,4 +49,3 @@
     }
   }
 </style>
-

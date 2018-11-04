@@ -11,6 +11,9 @@ http.createServer(function (request, response) {
     // 如果以json格式传输，设置允许预请求的头
     // 'Access-Control-Allow-Headers': 'content-type'
   })
+  if (pathname === '/') {
+    response.end('hello')
+  }
   if (pathname === '/signUp') {
     handleSignUp(request, response)
   } else if (pathname === '/loginIn') {

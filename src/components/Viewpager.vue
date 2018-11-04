@@ -11,83 +11,90 @@
   </section>
 </template>
 <script>
-  export default {
-    data () {
-      return {
-        // 直接引入url不会被vue解析，需要以模块的形式引入
-        imgUrls: [require('../assets/images/movie/01.jpg'),require('../assets/images/movie/02.jpg'),require('../assets/images/movie/03.jpg'),require('../assets/images/movie/04.jpg'),require('../assets/images/movie/05.jpg')],
-        mark:0,
-        t:''
+export default {
+  data () {
+    return {
+      // 直接引入url不会被vue解析，需要以模块的形式引入
+      imgUrls: [require('../assets/images/movie/01.jpg'), require('../assets/images/movie/02.jpg'), require('../assets/images/movie/03.jpg'), require('../assets/images/movie/04.jpg'), require('../assets/images/movie/05.jpg')],
+      mark: 0,
+      t: '',
+      WHRatio:16/9
+    }
+  },
+  methods: {
+    //根据不同的媒体设备，取不同的宽高比，默认16/9
+    setWHRadio () {
+      // 设置PC端的宽高比
+      if (window.innerWidth > 800) {
+        this.WHRatio = 16/5
       }
     },
-    methods:{
-      setSectionSize () {
-        // 设定section的高度
-        let width = this.$refs.viewpager.clientWidth
-        this.$refs.viewpager.style.height = width * 9 / 16 + 'px' 
-      },
-      setImgSize (){
-        // 为使图片完全铺满div且保持其原来的宽高比,判定图片的宽高比，以便设置width或height为100%
-        let imgArr = this.$refs.img
-        for (var i = 0; i < imgArr.length; i++) {
-          let ratio = imgArr[i].clientWidth / imgArr[i].clientHeight
-          // 由于每个图片节点加了v-show，在初次渲染时只能读取被显示出来了的图片的宽高信息，未被显示的宽高为零，ratio为NaN，因此在后续dom更新时，均需调用此函数，来设置显示出来的图片尺寸
-          if (imgArr[i].clientWidth != 0) {
-            if (ratio > 16/9) {
-              imgArr[i].style.height = '100%'
-            }else{
-              imgArr[i].style.width = '100%'
-            }
+    setSectionSize () {
+      // 设定section的高度
+      let width = this.$refs.viewpager.clientWidth
+      this.$refs.viewpager.style.height = width / this.WHRatio + 'px'
+    },
+    setImgSize () {
+      // 为使图片完全铺满div且保持其原来的宽高比,判定图片的宽高比，以便设置width或height为100%
+      let imgArr = this.$refs.img
+      for (var i = 0; i < imgArr.length; i++) {
+        let ratio = imgArr[i].clientWidth / imgArr[i].clientHeight
+        // 由于每个图片节点加了v-show，在初次渲染时只能读取被显示出来了的图片的宽高信息，未被显示的宽高为零，ratio为NaN，因此在后续dom更新时，均需调用此函数，来设置显示出来的图片尺寸
+        if (imgArr[i].clientWidth !== 0) {
+          if (ratio > this.WHRatio) {
+            imgArr[i].style.height = '100%'
+          } else {
+            imgArr[i].style.width = '100%'
           }
         }
-      },
-      autoPlay () {
-        this.mark += 1
-        if (this.mark === 5) {
-          this.mark = 0
-        }
-      },
-      play () {
-        this.t = setInterval(this.autoPlay,2500)
-      },
-      // 鼠标移出时继续轮播；
-      go () {
-        this.play()
-      },
-      // 鼠标移入时停止轮播；
-      stop () {
-        clearInterval(this.t)
-      },
-      // 为tag添加点击事件，改变图片；
-      change (index) {
-        this.mark = index
       }
-
     },
-    updated () {
-      // 图片节点更新时，调用此函数；
-      this.setImgSize()
-     
+    autoPlay () {
+      this.mark += 1
+      if (this.mark === 5) {
+        this.mark = 0
+      }
     },
-    mounted () {
-      this.setSectionSize()
-      // 初次挂载时设置首张图片的尺寸；
-      this.setImgSize()
-      // 调用轮播函数；
+    play () {
+      this.t = setInterval(this.autoPlay, 2500)
+    },
+    // 鼠标移出时继续轮播；
+    go () {
       this.play()
-   
+    },
+    // 鼠标移入时停止轮播；
+    stop () {
+      clearInterval(this.t)
+    },
+    // 为tag添加点击事件，改变图片；
+    change (index) {
+      this.mark = index
     }
+
+  },
+  updated () {
+    // 图片节点更新时，调用此函数；
+    this.setImgSize()
+  },
+  mounted () {
+    this.setWHRadio()
+    this.setSectionSize()
+    // 初次挂载时设置首张图片的尺寸；
+    this.setImgSize()
+    // 调用轮播函数；
+    this.play()
   }
+}
 </script>
 <style lang="less" scoped>
-//定义过度css
-  .fade-enter-active,.fade-leave-active{
-    transition: opacity 1s
-  }
-  .fade-enter,.fade-leave-to{
-    opacity: 0
-  }
   .viewpager{
+    //定义过度css
+    .fade-enter-active,.fade-leave-active{
+      transition: opacity 1s
+    }
+    .fade-enter,.fade-leave-to{
+      opacity: 0
+    }
     font-size: 0;
     width: 100%;
     overflow: hidden;
@@ -125,15 +132,5 @@
       }
     }
   }
-  
+
 </style>
-
-
-
-
-
-
-
-
-
-
