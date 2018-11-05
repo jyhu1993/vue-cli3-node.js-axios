@@ -1,0 +1,111 @@
+{
+  "waitShowingMovie":[
+    {
+      "url":"server/src/waitShowingMovie/hunk",
+      "name":"hunk",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/告解",
+      "name":"告解",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/哈利波特",
+      "name":"哈利波特",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/大兵小将",
+      "name":"大兵小将",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/大魔术师",
+      "name":"大魔术师",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/失孤",
+      "name":"失孤",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/山楂树之恋",
+      "name":"山楂树之恋",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/建国大业",
+      "name":"建国大业",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/斯大林格勒",
+      "name":"斯大林格勒",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/江山美人",
+      "name":"江山美人",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/美国队长",
+      "name":"美国队长",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/钱学森",
+      "name":"钱学森",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/霍比特人",
+      "name":"霍比特人",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/waitShowingMovie/魔兽世界",
+      "name":"魔兽世界",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+

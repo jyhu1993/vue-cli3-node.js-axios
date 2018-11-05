@@ -1,27 +1,27 @@
 <template>
   <section id="wait-showing">
     <div class="movie-num">
-      <span>正在热映({{movieNum}})</span>
+      <span>即将上映({{movies.length}})</span>
       <a @click='changeMark' href="#">下一页>></a>
     </div>
     <div class="movie" ref='movie'>
-        <div v-show='num>minMark&&num<maxMark' v-for='num in movieNum' :key='num' class="item">
-          <img @mouseover='showMask(num)' src="../assets/images/movie/02.jpg">
-          <span @click='wantWatch' class="heart">
+        <div v-show='index>minMark&&index<maxMark' v-for='(movie,index) in movies' :key='index' class="item">
+          <img @mouseover='showMask(index)' :src="movie.url">
+          <span @click.self='wantWatch($event,movie)' class="heart">
             <span class="heart-container">
               <span class="left"></span>
               <span class="right"></span>
             </span>
-            想看{{num}}
+            想看{{index}}
           </span>
           <transition name='slide'>
-            <div  v-show='num===maskMark' class="layout">
+            <div  v-show='index===maskMark' class="layout">
               <div class="mask"></div>
               <p @mouseout='hideMask'>
-                导演:aa<br>
-                主演:bb<br>
-                类型:cc<br>
-                片长:dd<br>
+                片面:{{movie.name}}<br>
+                导演:{{movie.director}}<br>
+                主演:{{movie.actor}}<br>
+                片长:{{movie.time}}<br>
               </p>
             </div>
           </transition>
@@ -30,15 +30,17 @@
   </section>
 </template>
 <script>
+  import axios from 'axios'
   export default {
     data () {
       return {
-        movieNum: Math.floor(30*Math.random() + 10),
+        movies:Array,
         // 为每页能显示的影片数量设置minMark和maxMark
-        minMark:0,
+        minMark:-1,
         maxMark:0,
         numInEveryLine:0,
-        maskMark:0,
+        maskMark:-1,
+        wantWatchMovies:[]
       }
     },
     methods:{
@@ -53,10 +55,10 @@
         this.maxMark = this.numInEveryLine + 1
       },
       // 点击事件改变mark;
-      changeMark (e) {
-        e.preventDefault()
-        if (this.maxMark > this.movieNum) {
-          this.minMark = 0
+      changeMark (event,movie) {
+        event.preventDefault()
+        if (this.maxMark > this.movies.length) {
+          this.minMark = -1
           this.maxMark = this.numInEveryLine + 1
         }else{
           this.minMark += this.numInEveryLine
@@ -64,26 +66,58 @@
         }
       },
       // 遮罩层；
-      showMask (num) {
-        this.maskMark = num
+      showMask (index) {
+        this.maskMark = index
       },
-      hideMask (num) {
-        this.maskMark = 0
+      hideMask (index) {
+        this.maskMark = -1
       },
-      // 点击想看改变心的颜色;
-      wantWatch (e) {
-        let target = e.target
+      // 点击想看改变心的颜色，并存储对应的电影
+      wantWatch (event,movie) {
+        let target = event.target
         let heart = target.firstChild.childNodes
-        for (var i = 0; i < heart.length; i++) {
-          if(heart[i].style.backgroundColor === 'rgb(228, 25, 42)'){
-            heart[i].style.backgroundColor = 'rgb(255, 255, 255)'
-            this.$store.state.numOfCollectMovie -= 1
-          }else{
-            heart[i].style.backgroundColor = 'rgb(228, 25, 42)';
-            this.$store.state.numOfCollectMovie += 1
-          } 
-        }
+        if(heart[0].style.backgroundColor === 'rgb(228, 25, 42)'){
+          heart[0].style.backgroundColor = 'rgb(255, 255, 255)'
+          heart[1].style.backgroundColor = 'rgb(255, 255, 255)'
+          this.$store.commit('decrement',1)
+          let index = this.wantWatchMovies.indexOf(movie)
+          if (index !== -1) {
+            this.wantWatchMovies.splice(index,1)
+          }
+        }else{
+          heart[0].style.backgroundColor = 'rgb(228, 25, 42)';
+          heart[1].style.backgroundColor = 'rgb(228, 25, 42)';
+          this.$store.commit('increment',1)
+          this.wantWatchMovies.push(movie)
+        } 
+        axios({
+          method:'post',
+          url:'http://192.168.3.6:1234/saveWantWatchMovies',
+          data:JSON.stringify({
+            user:this.$store.state.userName,
+            wantWatchMovies:this.wantWatchMovies
+          })
+        })
+      },
+      // 向服务器发送请求，初始化影片内容
+      initWaitingShowing () {
+        axios.get('http://192.168.3.6:1234/getWaitingMovie')
+        .then((response) => {
+          this.movies = response.data.waitShowingMovie
+          for (var i = 0; i < this.movies.length; i++) {
+            let url = this.movies[i].url
+            this.movies[i].url = require('../../'+url+'.jpeg')
+          }
+        })
+        .catch(function(err){
+          console.error(err);
+        })
+
       }
+    },
+    created () {
+      // 向服务器发起请求，获取即将上映的影片信息；
+      this.initWaitingShowing()
     },
     mounted () {
       this.showedItem()
@@ -148,6 +182,7 @@
         }
         img{
           height: 80%;
+          width: 100%;
         }
         .heart{
           font-size: 1rem;
@@ -193,6 +228,13 @@
         height: 140px;
         .item{
           width: 80px;
+          .layout{
+            p{
+              padding:0.5rem;
+              font-size: 0.5rem;
+              overflow: hidden;
+            }
+          }
         }
       }
     }

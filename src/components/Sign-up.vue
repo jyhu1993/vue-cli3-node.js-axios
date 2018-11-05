@@ -36,7 +36,7 @@ export default {
       } else if ((this.user.password !== '') && (this.passwordConfirm !== '')) {
         event.preventDefault()
         let xhr = new XMLHttpRequest()
-        xhr.open('post', 'http://192.168.43.32:1234/signUp', true)
+        xhr.open('post', 'http://192.168.3.6:1234/signUp', true)
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
         xhr.send(`user=${this.user.userName}&password=${this.user.password}`)
         this.user.password = ''

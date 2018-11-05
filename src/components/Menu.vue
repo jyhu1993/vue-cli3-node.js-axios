@@ -9,23 +9,64 @@
   </aside>
 </template>
 <script>
+  import axios from 'axios'
   export default {
     data () {
       return {
+        // 默认url
         url:require('../assets/images/movie/01.jpg'),
         order:0,
-        collect:this.$store.state.numOfCollectMovie
+      }
+    },
+    computed:{
+      collect () {
+        return this.$store.state.numOfCollectMovie
       }
     },
     methods:{
       uploadImage (e) {
+        console.log(1)
         let reader = new FileReader()
         reader.readAsDataURL(e.target.files[0])
         let that = this
         reader.onload = function(){
+          // 使读取的图片立即呈现在页面上；
           that.url = this.result
+          let content = {
+            user:that.$store.state.userName,
+            headImg:that.url
+          }
+          content = JSON.stringify(content)
+          axios.post('http://192.168.3.6:1234/saveImage', content).then(function(response){
+            console.log(response)
+          }).catch(function(err){
+            console.error(err)
+          })
         }
+      },
+      // 读取用户信息；
+      downloadUserInfo () {
+        var that = this
+        axios({
+          method:'post',
+          url:'http://192.168.3.6:1234/checkUserInfo',
+          data:JSON.stringify({
+            user:this.$store.state.userName
+          })
+        }).then((response) => {
+          if (response.data.headImg !== undefined) {
+            that.url = response.data.headImg
+          }
+          if (response.data.wantWatchMovies === undefined) {
+            that.$store.commit('changeCollectMovie', 0)
+          }else{
+            that.$store.commit('changeCollectMovie', response.data.wantWatchMovies.length)
+          }
+        })
       }
+    },
+    created () {
+      this.downloadUserInfo()
     }
 
   }

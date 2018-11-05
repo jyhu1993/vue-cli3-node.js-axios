@@ -1,21 +1,21 @@
 <template>
   <section id="hot-showing">
     <div class="movie-num">
-      <span>正在热映({{movieNum}})</span>
+      <span>正在热映({{movies.length}})</span>
       <a @click='changeMark' href="#">下一页>></a>
     </div>
     <div class="movie" ref='movie'>
-        <div v-show='num>minMark&&num<maxMark' v-for='num in movieNum' :key='num' class="item">
-          <img @mouseover='showMask(num)' src="../assets/images/movie/01.jpg">
-          <span>购票{{num}}</span>
+        <div v-show='index>minMark&&index<maxMark' v-for='(movie,index) in movies' :key='index' class="item">
+          <img @mouseover='showMask(index)' :src="movie.url">
+          <span>购票{{index}}</span>
           <transition name='slide'>
-            <div  v-show='num===maskMark' class="layout">
+            <div  v-show='index===maskMark' class="layout">
               <div class="mask"></div>
               <p @mouseout='hideMask'>
-                导演:aa<br>
-                主演:bb<br>
-                类型:cc<br>
-                片长:dd<br>
+                片名:{{movie.name}}<br>
+                导演:{{movie.director}}<br>
+                主演:{{movie.actor}}<br>
+                片长:{{movie.time}}<br>
               </p>
             </div>
           </transition>
@@ -24,15 +24,31 @@
   </section>
 </template>
 <script>
+  import axios from 'axios'
   export default {
     data () {
       return {
-        movieNum: Math.floor(30*Math.random() + 10),
-        minMark:0,
+        movies:Array,
+        minMark:-1,
         maxMark:0,
         numInEveryLine:0,
-        maskMark:0
+        maskMark:-1
       }
+    },
+    created () {
+      // 向服务器发起请求，获取正在热映的影片信息；
+      axios.get('http://192.168.3.6:1234/getShowingMovie')
+        .then((response) => {
+          this.movies = response.data.hotShowingMovie
+          for (var i = 0; i < this.movies.length; i++) {
+            let url = this.movies[i].url
+            this.movies[i].url = require('../../'+url+'.jpeg')
+          }
+        })
+        .catch(function(err){
+          console.error(err);
+        })
+
     },
     methods:{
       // 确认每行有几个item，并初始化minMark,maxMark,numInEveryLine的值
@@ -48,8 +64,8 @@
       // 点击事件改变mark;
       changeMark (e) {
         e.preventDefault()
-        if (this.maxMark > this.movieNum) {
-          this.minMark = 0
+        if (this.maxMark > this.movies.length) {
+          this.minMark = -1
           this.maxMark = this.numInEveryLine + 1
         }else{
           this.minMark += this.numInEveryLine
@@ -57,11 +73,11 @@
         }
       },
       // 遮罩层；
-      showMask (num) {
-        this.maskMark = num
+      showMask (index) {
+        this.maskMark = index
       },
-      hideMask (num) {
-        this.maskMark = 0
+      hideMask (index) {
+        this.maskMark = -1
       }
     },
     mounted () {
@@ -121,11 +137,13 @@
             color:white;
             font-size: 1rem;
             text-align: left;   
-            padding:1rem;       
+            padding:1rem;
+            overflow: hidden;       
           }
         }
         img{
           height: 80%;
+          width: 100%;
         }
         span{
           font-size: 1rem;
@@ -150,12 +168,16 @@
         height: 140px;
         .item{
           width: 80px;
+          .layout{
+            p{
+              font-size: 0.5rem;
+              padding:0.5rem;
+              overflow: hidden;
+            }
+          }
         }
       }
     }
   }
-
-
-
 
 </style>

@@ -11,29 +11,36 @@ http.createServer(function (request, response) {
     // 如果以json格式传输，设置允许预请求的头
     // 'Access-Control-Allow-Headers': 'content-type'
   })
-  if (pathname === '/') {
-    response.end('hello')
-  }
-  if (pathname === '/signUp') {
-    handleSignUp(request, response)
-  } else if (pathname === '/loginIn') {
-    handleLoginIn(request, response)
+  switch (pathname) {
+    case '/': response.end('hello')
+      break
+    case '/signUp': handleSignUp(request, response)
+      break
+    case '/loginIn': handleLoginIn(request, response)
+      break
+    case '/getShowingMovie': getShowingMovie(request, response)
+      break
+    case '/getWaitingMovie': getWaitingMovie(request, response)
+      break
+    case '/saveImage': handleUserHeadImage(request, response)
+      break
+    case '/checkUserInfo': checkUserInfo(request, response)
+      break
+    case '/saveWantWatchMovies': saveWantWatchMovies(request, response)
+      break
   }
 }).listen(1234)
 
-console.log('server is started')
+console.log('server is started at port 1234')
 // 确认用户名，密码是否已注册过；
 function handleLoginIn (request, response) {
   var body = ''
   request.on('data', function (chunk) {
     body += chunk
-    console.log(chunk)
   })
   request.on('end', function () {
-    console.log(body)
     body = querystring.parse(body)
-    console.log(body)
-    fs.readFile('userInfo.json', function (err, data) {
+    fs.readFile('./user/userInfo.json', function (err, data) {
       if (err) {
         console.error(err)
       }
@@ -41,6 +48,14 @@ function handleLoginIn (request, response) {
       for (var i = 0; i < content.users.length; i++) {
         if ((content.users[i].user === body.user) && (content.users[i].password === body.password)) {
           response.end('true')
+          // 为该用户创建用户存储该用户信息的json文件；
+          let initContent = { user: `${body.user}` }
+          initContent = JSON.stringify(initContent, null, '\t')
+          fs.writeFile(`./user/${body.user}.json`, initContent, { 'flag': 'wx' }, function (err) {
+            if (err) {
+              console.log('文件已存在')
+            }
+          })
           return
         }
       }
@@ -57,7 +72,7 @@ function handleSignUp (request, response) {
   })
   request.on('end', function () {
     body = querystring.parse(body)
-    fs.readFile('userInfo.json', function (err, data) {
+    fs.readFile('./user/userInfo.json', function (err, data) {
       if (err) {
         console.error(err)
       }
@@ -70,12 +85,101 @@ function handleSignUp (request, response) {
       }
       content.users.push(body)
       content = JSON.stringify(content, null, '\t')
-      fs.writeFile('userInfo.json', content, { 'flag': 'w' }, function (err) {
+      fs.writeFile('./user/userInfo.json', content, { 'flag': 'w' }, function (err) {
         if (err) {
           console.error(err)
         }
         response.end('true')
       })
     })
+  })
+}
+// 处理前端热映影片的数据请求
+function getShowingMovie (request, response) {
+  fs.readFile('./src/json/hotShowing.json', function (err, data) {
+    if (err) {
+      console.error(err)
+    }
+    response.end(data)
+  })
+}
+// 处理前端即将上映影片的数据请求
+function getWaitingMovie (request, response) {
+  fs.readFile('./src/json/waitShowing.json', function (err, data) {
+    if (err) {
+      console.error(err)
+    }
+    response.end(data)
+  })
+}
+// 存储用户上传的头像照片
+function handleUserHeadImage (request, response) {
+  var body = ''
+  request.on('data', function (chunk) {
+    body += chunk
+  })
+  request.on('end', function () {
+    body = JSON.parse(body)
+    var user = body.user
+    fs.readFile(`./user/${user}.json`, function (err, data) {
+      if (err) {
+        console.error(err)
+      }
+      data = JSON.parse(data)
+      data.headImg = body.headImg
+      data = JSON.stringify(data, null, '\t')
+      fs.writeFile(`./user/${user}.json`, data, { 'flag': 'w' }, function (err) {
+        if (err) {
+          console.error(err)
+        }
+      })
+    })
+    response.end('upload success')
+  })
+}
+// 存储用户喜欢的电影；
+function saveWantWatchMovies (request, response) {
+  var body = ''
+  request.on('data', function (chunk) {
+    body += chunk
+  })
+  request.on('end', function () {
+    body = JSON.parse(body)
+    var user = body.user
+    fs.readFile(`./user/${user}.json`, function (err, data) {
+      if (err) {
+        console.error(err)
+      }
+      data = JSON.parse(data)
+      data.wantWatchMovies = body.wantWatchMovies
+      data = JSON.stringify(data, null, '\t')
+      fs.writeFile(`./user/${user}.json`, data, { 'flag': 'w' }, function (err) {
+        if (err) {
+          console.error(err)
+        }
+      })
+    })
+    response.end('save success')
+  })
+}
+// 初始化下载用户信息；
+function checkUserInfo (request, response) {
+  var body = ''
+  request.on('data', function (chunk) {
+    body += chunk
+  })
+  request.on('end', function () {
+    body = JSON.parse(body)
+    var user = body.user
+    if (user !== '') {
+      fs.readFile(`./user/${user}.json`, function (err, data) {
+        if (err) {
+          console.error(err)
+        }
+        response.end(data)
+      })
+    } else {
+      response.end()
+    }
   })
 }

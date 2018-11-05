@@ -30,7 +30,7 @@ export default {
         event.preventDefault()
         var xhr = new XMLHttpRequest()
         // 192.168.3.6为电脑与手机所连路由器地址，为了使手机端也可访问node.js搭建的服务器，故设置为此ip
-        xhr.open('post', 'http://192.168.43.32:1234/loginIn', true)
+        xhr.open('post', 'http://192.168.3.6:1234/loginIn', true)
         // xhr.setRequestHeader("content-type","application/json")
         xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
         xhr.send(`user=${this.user.userName}&password=${this.user.password}`)
@@ -47,7 +47,7 @@ export default {
                 break
               case 'true':
                 // 通过store记录当前用户名;token作为判断是否登录的标志；
-                that.$store.state.token = true
+                that.$store.commit('changeToken')
                 that.$store.state.userName = that.user.userName
                 that.$router.push('/home')
                 break

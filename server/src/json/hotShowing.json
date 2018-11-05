@@ -1,0 +1,104 @@
+{
+  "hotShowingMovie":[
+    {
+      "url":"server/src/hotShowingMovie/dream in dieing",
+      "name":"dream in dieing",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/hotShowingMovie/firstBlood",
+      "name":"firstBlood",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/hotShowingMovie/warning",
+      "name":"warning",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/hotShowingMovie/x战警",
+      "name":"x战警",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/hotShowingMovie/亲密敌人",
+      "name":"亲密敌人",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/hotShowingMovie/后会无期",
+      "name":"后会无期",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/hotShowingMovie/悲惨世界",
+      "name":"悲惨世界",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/hotShowingMovie/战国之怒",
+      "name":"战国之怒",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/hotShowingMovie/泰坦尼克号",
+      "name":"泰坦尼克号",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/hotShowingMovie/狄仁杰",
+      "name":"狄仁杰",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/hotShowingMovie/赤道",
+      "name":"赤道",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/hotShowingMovie/那年花开",
+      "name":"那年花开",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    },
+    {
+      "url":"server/src/hotShowingMovie/钢铁人",
+      "name":"钢铁人",
+      "director":"John",
+      "actor":"Tom",
+      "time":"120min"
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+
