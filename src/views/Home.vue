@@ -25,7 +25,7 @@ export default {
   data () {
     return {
       userName: this.$store.state.userName,
-      menuShow:false
+      menuShow: false
     }
   },
   methods:{

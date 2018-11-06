@@ -9,8 +9,8 @@
           <img @mouseover='showMask(index)' :src="movie.url">
           <span @click.self='wantWatch($event,movie)' class="heart">
             <span class="heart-container">
-              <span class="left"></span>
-              <span class="right"></span>
+              <span :class='[wantWatchMovieNames.indexOf(movie.name) !== -1 ? "red" : ""]' class="left"></span>
+              <span :class='[wantWatchMovieNames.indexOf(movie.name) !== -1 ? "red" : ""]' class="right"></span>
             </span>
             想看{{index}}
           </span>
@@ -40,7 +40,17 @@
         maxMark:0,
         numInEveryLine:0,
         maskMark:-1,
-        wantWatchMovies:[]
+      }
+    },
+    computed: {
+      wantWatchMovieNames () {
+        let wantWatchMovieNames = []
+        let wantWatchMovies = this.$store.state.wantWatchMovies
+        console.log(wantWatchMovies)
+        for (var i = 0; i < wantWatchMovies.length; i++) {
+          wantWatchMovieNames.push(wantWatchMovies[i].name)
+        }
+        return wantWatchMovieNames
       }
     },
     methods:{
@@ -76,26 +86,17 @@
       wantWatch (event,movie) {
         let target = event.target
         let heart = target.firstChild.childNodes
-        if(heart[0].style.backgroundColor === 'rgb(228, 25, 42)'){
-          heart[0].style.backgroundColor = 'rgb(255, 255, 255)'
-          heart[1].style.backgroundColor = 'rgb(255, 255, 255)'
-          this.$store.commit('decrement',1)
-          let index = this.wantWatchMovies.indexOf(movie)
-          if (index !== -1) {
-            this.wantWatchMovies.splice(index,1)
-          }
+        if(heart[0].className.includes('red')){
+          this.$store.commit('decrementWantWatchMovie',movie)
         }else{
-          heart[0].style.backgroundColor = 'rgb(228, 25, 42)';
-          heart[1].style.backgroundColor = 'rgb(228, 25, 42)';
-          this.$store.commit('increment',1)
-          this.wantWatchMovies.push(movie)
+          this.$store.commit('incrementWantWatchMovie',movie)
         } 
         axios({
           method:'post',
           url:'http://192.168.3.6:1234/saveWantWatchMovies',
           data:JSON.stringify({
             user:this.$store.state.userName,
-            wantWatchMovies:this.wantWatchMovies
+            wantWatchMovies:this.$store.state.wantWatchMovies
           })
         })
       },
@@ -112,8 +113,7 @@
         .catch(function(err){
           console.error(err);
         })
-
-      }
+      },
     },
     created () {
       // 向服务器发起请求，获取即将上映的影片信息；
@@ -214,6 +214,10 @@
             }
             .right{
               transform: translate(-50%,-50%) rotate(60deg);
+            }
+            // 动态添加的心 的背景颜色
+            .red{
+              background-color: rgb(228, 25, 42);
             }
           }
         }

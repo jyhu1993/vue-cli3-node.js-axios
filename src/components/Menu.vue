@@ -4,8 +4,8 @@
       <label for="file"><img class="show-img" :src="url" title="点击更换头像"></label>
       <input @change='uploadImage' type="file" id="file" name="pic" value="" accept="image/*">
     </div>
-    <div class="item">我的订单({{order}})<span>></span></div>
-    <div class="item">我的收藏({{collect}})<span>></span></div>
+    <div class="item"><router-link  to='/order'>我的订单({{order}})<span>></span></router-link></div>
+    <div class="item"><router-link  to='/collect'>我的收藏({{collect}})<span>></span></router-link></div>
   </aside>
 </template>
 <script>
@@ -20,7 +20,7 @@
     },
     computed:{
       collect () {
-        return this.$store.state.numOfCollectMovie
+        return this.$store.state.wantWatchMovies.length
       }
     },
     methods:{
@@ -58,9 +58,9 @@
             that.url = response.data.headImg
           }
           if (response.data.wantWatchMovies === undefined) {
-            that.$store.commit('changeCollectMovie', 0)
+            that.$store.commit('initWantWatchMovies', [])
           }else{
-            that.$store.commit('changeCollectMovie', response.data.wantWatchMovies.length)
+            that.$store.commit('initWantWatchMovies', response.data.wantWatchMovies)
           }
         })
       }
@@ -86,14 +86,19 @@
     border-bottom: 1px solid white;
     border-right: 1px solid white;
     .item{
+      a{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        text-decoration: none;
+        color:white;
+      }
       margin-bottom: 0.5rem;
-      color:white;
       cursor: pointer;
       text-align: left;
       border-bottom: 1px #eee solid;
       padding:0.5rem 0;
-      display: flex;
-      justify-content: space-between;
+      
     }
     .head{
       #file{

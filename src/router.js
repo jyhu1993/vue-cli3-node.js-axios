@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './views/Login.vue'
 import Home from './views/Home.vue'
+import Collect from './views/Collect.vue'
+import Order from './views/Order.vue'
 
 Vue.use(Router)
 
@@ -33,6 +35,16 @@ export default new Router({
           path: 'signUp',
           component: () => import('./components/Sign-up.vue')
         }]
+    },
+    {
+      path: '/collect',
+      name: 'collect',
+      component: Collect
+    },
+    {
+      path: '/order',
+      name: 'order',
+      component: Order
     }
   ]
 })

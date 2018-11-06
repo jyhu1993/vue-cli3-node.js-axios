@@ -9,9 +9,7 @@ export default new Vuex.Store({
     token: false,
     // 保存已登录用户的用户名，以便全局使用；
     userName: '',
-    // 为收藏的电影计数
-    numOfCollectMovie: 0,
-    wantWatchMovies: Array
+    wantWatchMovies: []
   },
   mutations: {
     // 改变token的状态
@@ -19,18 +17,15 @@ export default new Vuex.Store({
       state.token = true
     },
     // 对收藏的电影进行+1或-1操作；
-    increment (state, n) {
-      state.numOfCollectMovie += n
+    incrementWantWatchMovie (state, movie) {
+      state.wantWatchMovies.push(movie)
     },
-    decrement (state, n) {
-      state.numOfCollectMovie -= n
+    decrementWantWatchMovie (state, movie) {
+      let index = state.wantWatchMovies.indexOf(movie)
+      state.wantWatchMovies.splice(index, 1)
     },
-    // 改变numOfCollectMovie的初始值；
-    changeCollectMovie (state, n) {
-      state.numOfCollectMovie = n
-    },
-    //
-    changeWantWatchMovies (state, arr) {
+    // 初始化想看的影片
+    initWantWatchMovies (state, arr) {
       state.wantWatchMovies = arr
     }
   },
