@@ -1,7 +1,7 @@
 # movie_view
 
 ## 项目简介
-### 技术：vue-cli3,node.js,axios，json
+### 技术：vue-cli3，node.js，axios，json
 ### 功能：注册登录页，电影收藏，购票，根据用户ip查找用户附近电影院（BMap），node.js+json文件存储用户操作信息，axios实现前后端交互
 
 ## 项目安装
