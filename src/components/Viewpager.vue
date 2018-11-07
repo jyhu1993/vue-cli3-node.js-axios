@@ -18,15 +18,15 @@ export default {
       imgUrls: [require('../assets/images/movie/01.jpg'), require('../assets/images/movie/02.jpg'), require('../assets/images/movie/03.jpg'), require('../assets/images/movie/04.jpg'), require('../assets/images/movie/05.jpg')],
       mark: 0,
       t: '',
-      WHRatio:16/9
+      WHRatio: 16 / 9
     }
   },
   methods: {
-    //根据不同的媒体设备，取不同的宽高比，默认16/9
+    // 根据不同的媒体设备，取不同的宽高比，默认16/9
     setWHRadio () {
       // 设置PC端的宽高比
       if (window.innerWidth > 800) {
-        this.WHRatio = 16/5
+        this.WHRatio = 16 / 5
       }
     },
     setSectionSize () {

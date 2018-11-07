@@ -7,7 +7,7 @@
     <div class="movie" ref='movie'>
         <div v-show='index>minMark&&index<maxMark' v-for='(movie,index) in movies' :key='index' class="item">
           <img @mouseover='showMask(index)' :src="movie.url">
-          <span>购票{{index}}</span>
+          <span @click='setCurrentBuyTicketMovie(movie)'><router-link to='/buyTicket'>购票</router-link></span>
           <transition name='slide'>
             <div  v-show='index===maskMark' class="layout">
               <div class="mask"></div>
@@ -24,66 +24,70 @@
   </section>
 </template>
 <script>
-  import axios from 'axios'
-  export default {
-    data () {
-      return {
-        movies:Array,
-        minMark:-1,
-        maxMark:0,
-        numInEveryLine:0,
-        maskMark:-1
-      }
-    },
-    created () {
-      // 向服务器发起请求，获取正在热映的影片信息；
-      axios.get('http://192.168.3.6:1234/getShowingMovie')
-        .then((response) => {
-          this.movies = response.data.hotShowingMovie
-          for (var i = 0; i < this.movies.length; i++) {
-            let url = this.movies[i].url
-            this.movies[i].url = require('../../'+url+'.jpeg')
-          }
-        })
-        .catch(function(err){
-          console.error(err);
-        })
-
-    },
-    methods:{
-      // 确认每行有几个item，并初始化minMark,maxMark,numInEveryLine的值
-      showedItem () {
-        let movieWith = this.$refs.movie.clientWidth
-        if (movieWith > 699) {
-          this.numInEveryLine = Math.floor(movieWith / 160)
-        }else{
-          this.numInEveryLine = Math.floor(movieWith / 80)
-        }
-        this.maxMark = this.numInEveryLine + 1
-      },
-      // 点击事件改变mark;
-      changeMark (e) {
-        e.preventDefault()
-        if (this.maxMark > this.movies.length) {
-          this.minMark = -1
-          this.maxMark = this.numInEveryLine + 1
-        }else{
-          this.minMark += this.numInEveryLine
-          this.maxMark += this.numInEveryLine
-        }
-      },
-      // 遮罩层；
-      showMask (index) {
-        this.maskMark = index
-      },
-      hideMask (index) {
-        this.maskMark = -1
-      }
-    },
-    mounted () {
-      this.showedItem()
+import axios from 'axios'
+export default {
+  data () {
+    return {
+      movies: Array,
+      minMark: -1,
+      maxMark: 0,
+      numInEveryLine: 0,
+      maskMark: -1
     }
+  },
+  created () {
+    // 向服务器发起请求，获取正在热映的影片信息；
+    axios.get('http://192.168.3.6:1234/getShowingMovie')
+      .then((response) => {
+        this.movies = response.data.hotShowingMovie
+        for (var i = 0; i < this.movies.length; i++) {
+          let url = this.movies[i].url
+          this.movies[i].url = require('../../' + url + '.jpeg')
+        }
+      })
+      .catch(function (err) {
+        console.error(err)
+      })
+  },
+  methods: {
+    // 确认每行有几个item，并初始化minMark,maxMark,numInEveryLine的值
+    showedItem () {
+      let movieWith = this.$refs.movie.clientWidth
+      if (movieWith > 699) {
+        this.numInEveryLine = Math.floor(movieWith / 160)
+      } else {
+        this.numInEveryLine = Math.floor(movieWith / 80)
+      }
+      this.maxMark = this.numInEveryLine + 1
+    },
+    // 点击事件改变mark;
+    changeMark (e) {
+      e.preventDefault()
+      if (this.maxMark > this.movies.length) {
+        this.minMark = -1
+        this.maxMark = this.numInEveryLine + 1
+      } else {
+        this.minMark += this.numInEveryLine
+        this.maxMark += this.numInEveryLine
+      }
+    },
+    // 遮罩层；
+    showMask (index) {
+      this.maskMark = index
+    },
+    hideMask (index) {
+      this.maskMark = -1
+    },
+    // 当前购票影片
+    setCurrentBuyTicketMovie (obj) {
+      this.$store.commit('changeCurrentBuyTicketMovie', obj)
+      console.log(this.$store.state.currentBuyTicketMovie)
+    }
+  },
+  mounted () {
+    this.showedItem()
   }
+}
 </script>
 <style lang="less">
 
@@ -136,9 +140,9 @@
             height: 100%;
             color:white;
             font-size: 1rem;
-            text-align: left;   
+            text-align: left;
             padding:1rem;
-            overflow: hidden;       
+            overflow: hidden;
           }
         }
         img{
@@ -146,7 +150,6 @@
           width: 100%;
         }
         span{
-          font-size: 1rem;
           display: inline-block;
           height: 20%;
           width: 100%;
@@ -154,8 +157,12 @@
           align-items: center;
           justify-content: center;
           background-color: #1b9095;
-          color:white;
           cursor: pointer;
+          a{
+            text-decoration: none;
+            color:white;
+            font-size: 1rem;
+          }
         }
       }
     }

@@ -28,7 +28,7 @@ export default {
       menuShow: false
     }
   },
-  methods:{
+  methods: {
     changeMenuShow () {
       this.menuShow = !this.menuShow
     }
@@ -36,8 +36,8 @@ export default {
   components: {
     Viewpager: Viewpager,
     HotShowing: HotShowing,
-    WaitingShowing:WaitingShowing,
-    Menu:Menu
+    WaitingShowing: WaitingShowing,
+    Menu: Menu
   }
 }
 </script>

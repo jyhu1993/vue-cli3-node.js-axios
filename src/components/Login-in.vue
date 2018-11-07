@@ -59,7 +59,7 @@ export default {
   }
 }
 </script>
-<style type="text/css" lang="less">
+<style lang="less">
   .login{
     display: inline-block;
     background: #1b9095;

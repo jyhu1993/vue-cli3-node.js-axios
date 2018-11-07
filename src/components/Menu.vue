@@ -9,67 +9,74 @@
   </aside>
 </template>
 <script>
-  import axios from 'axios'
-  export default {
-    data () {
-      return {
-        // 默认url
-        url:require('../assets/images/movie/01.jpg'),
-        order:0,
-      }
+import axios from 'axios'
+export default {
+  data () {
+    return {
+      // 默认url
+      url: require('../assets/images/movie/01.jpg')
+    }
+  },
+  computed: {
+    collect () {
+      return this.$store.state.wantWatchMovies.length
     },
-    computed:{
-      collect () {
-        return this.$store.state.wantWatchMovies.length
-      }
-    },
-    methods:{
-      uploadImage (e) {
-        console.log(1)
-        let reader = new FileReader()
-        reader.readAsDataURL(e.target.files[0])
-        let that = this
-        reader.onload = function(){
-          // 使读取的图片立即呈现在页面上；
-          that.url = this.result
-          let content = {
-            user:that.$store.state.userName,
-            headImg:that.url
-          }
-          content = JSON.stringify(content)
-          axios.post('http://192.168.3.6:1234/saveImage', content).then(function(response){
-            console.log(response)
-          }).catch(function(err){
-            console.error(err)
-          })
+    order () {
+      return this.$store.state.orders.length
+    }
+  },
+  methods: {
+    uploadImage (e) {
+      console.log(1)
+      let reader = new FileReader()
+      reader.readAsDataURL(e.target.files[0])
+      let that = this
+      reader.onload = function () {
+        // 使读取的图片立即呈现在页面上；
+        that.url = this.result
+        let content = {
+          user: that.$store.state.userName,
+          headImg: that.url
         }
-      },
-      // 读取用户信息；
-      downloadUserInfo () {
-        var that = this
-        axios({
-          method:'post',
-          url:'http://192.168.3.6:1234/checkUserInfo',
-          data:JSON.stringify({
-            user:this.$store.state.userName
-          })
-        }).then((response) => {
-          if (response.data.headImg !== undefined) {
-            that.url = response.data.headImg
-          }
-          if (response.data.wantWatchMovies === undefined) {
-            that.$store.commit('initWantWatchMovies', [])
-          }else{
-            that.$store.commit('initWantWatchMovies', response.data.wantWatchMovies)
-          }
+        content = JSON.stringify(content)
+        axios.post('http://192.168.3.6:1234/saveImage', content).then(function (response) {
+          console.log(response)
+        }).catch(function (err) {
+          console.error(err)
         })
       }
     },
-    created () {
-      this.downloadUserInfo()
+    // 读取用户信息；
+    downloadUserInfo () {
+      var that = this
+      axios({
+        method: 'post',
+        url: 'http://192.168.3.6:1234/checkUserInfo',
+        data: JSON.stringify({
+          user: this.$store.state.userName
+        })
+      }).then((response) => {
+        if (response.data.headImg !== undefined) {
+          that.url = response.data.headImg
+        }
+        if (response.data.wantWatchMovies === undefined) {
+          that.$store.commit('initWantWatchMovies', [])
+        } else {
+          that.$store.commit('initWantWatchMovies', response.data.wantWatchMovies)
+        }
+        if (response.data.order === undefined) {
+          that.$store.commit('initOrders', [])
+        } else {
+          that.$store.commit('initOrders', response.data.order)
+        }
+      })
     }
-
+  },
+  created () {
+    this.downloadUserInfo()
   }
+
+}
 </script>
 <style lang="less" scoped>
   #aside{
@@ -98,7 +105,7 @@
       text-align: left;
       border-bottom: 1px #eee solid;
       padding:0.5rem 0;
-      
+
     }
     .head{
       #file{

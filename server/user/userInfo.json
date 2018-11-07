@@ -43,6 +43,10 @@
 		{
 			"user": "qwe",
 			"password": "123"
+		},
+		{
+			"user": "zxc",
+			"password": "123"
 		}
 	]
 }

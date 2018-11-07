@@ -5,7 +5,7 @@
       <a @click='changeMark' href="#">下一页>></a>
     </div>
     <div class="movie" ref='movie'>
-        <div v-show='index>minMark&&index<maxMark' v-for='(movie,index) in movies' :key='index' class="item">
+        <div v-show='index>minMark&&index<maxMark' v-for='(movie,index) in movies' :key='movie.name' class="item">
           <img @mouseover='showMask(index)' :src="movie.url">
           <span @click.self='wantWatch($event,movie)' class="heart">
             <span class="heart-container">
@@ -30,102 +30,101 @@
   </section>
 </template>
 <script>
-  import axios from 'axios'
-  export default {
-    data () {
-      return {
-        movies:Array,
-        // 为每页能显示的影片数量设置minMark和maxMark
-        minMark:-1,
-        maxMark:0,
-        numInEveryLine:0,
-        maskMark:-1,
+import axios from 'axios'
+export default {
+  data () {
+    return {
+      movies: Array,
+      // 为每页能显示的影片数量设置minMark和maxMark
+      minMark: -1,
+      maxMark: 0,
+      numInEveryLine: 0,
+      maskMark: -1
+    }
+  },
+  computed: {
+    wantWatchMovieNames () {
+      let wantWatchMovieNames = []
+      let wantWatchMovies = this.$store.state.wantWatchMovies
+      console.log(wantWatchMovies)
+      for (var i = 0; i < wantWatchMovies.length; i++) {
+        wantWatchMovieNames.push(wantWatchMovies[i].name)
       }
-    },
-    computed: {
-      wantWatchMovieNames () {
-        let wantWatchMovieNames = []
-        let wantWatchMovies = this.$store.state.wantWatchMovies
-        console.log(wantWatchMovies)
-        for (var i = 0; i < wantWatchMovies.length; i++) {
-          wantWatchMovieNames.push(wantWatchMovies[i].name)
-        }
-        return wantWatchMovieNames
+      return wantWatchMovieNames
+    }
+  },
+  methods: {
+    // 确认每行有几个item，并初始化minMark,maxMark,numInEveryLine的值
+    showedItem () {
+      let movieWith = this.$refs.movie.clientWidth
+      if (movieWith > 699) {
+        this.numInEveryLine = Math.floor(movieWith / 160)
+      } else {
+        this.numInEveryLine = Math.floor(movieWith / 80)
       }
+      this.maxMark = this.numInEveryLine + 1
     },
-    methods:{
-      // 确认每行有几个item，并初始化minMark,maxMark,numInEveryLine的值
-      showedItem () {
-        let movieWith = this.$refs.movie.clientWidth
-        if (movieWith > 699) {
-          this.numInEveryLine = Math.floor(movieWith / 160)
-        }else{
-          this.numInEveryLine = Math.floor(movieWith / 80)
-        }
+    // 点击事件改变mark;
+    changeMark (event, movie) {
+      event.preventDefault()
+      if (this.maxMark > this.movies.length) {
+        this.minMark = -1
         this.maxMark = this.numInEveryLine + 1
-      },
-      // 点击事件改变mark;
-      changeMark (event,movie) {
-        event.preventDefault()
-        if (this.maxMark > this.movies.length) {
-          this.minMark = -1
-          this.maxMark = this.numInEveryLine + 1
-        }else{
-          this.minMark += this.numInEveryLine
-          this.maxMark += this.numInEveryLine
-        }
-      },
-      // 遮罩层；
-      showMask (index) {
-        this.maskMark = index
-      },
-      hideMask (index) {
-        this.maskMark = -1
-      },
-      // 点击想看改变心的颜色，并存储对应的电影
-      wantWatch (event,movie) {
-        let target = event.target
-        let heart = target.firstChild.childNodes
-        if(heart[0].className.includes('red')){
-          this.$store.commit('decrementWantWatchMovie',movie)
-        }else{
-          this.$store.commit('incrementWantWatchMovie',movie)
-        } 
-        axios({
-          method:'post',
-          url:'http://192.168.3.6:1234/saveWantWatchMovies',
-          data:JSON.stringify({
-            user:this.$store.state.userName,
-            wantWatchMovies:this.$store.state.wantWatchMovies
-          })
+      } else {
+        this.minMark += this.numInEveryLine
+        this.maxMark += this.numInEveryLine
+      }
+    },
+    // 遮罩层；
+    showMask (index) {
+      this.maskMark = index
+    },
+    hideMask (index) {
+      this.maskMark = -1
+    },
+    // 点击想看改变心的颜色，并存储对应的电影
+    wantWatch (event, movie) {
+      let target = event.target
+      let heart = target.firstChild.childNodes
+      if (heart[0].className.includes('red')) {
+        this.$store.commit('decrementWantWatchMovie', movie)
+      } else {
+        this.$store.commit('incrementWantWatchMovie', movie)
+      }
+      axios({
+        method: 'post',
+        url: 'http://192.168.3.6:1234/saveWantWatchMovies',
+        data: JSON.stringify({
+          user: this.$store.state.userName,
+          wantWatchMovies: this.$store.state.wantWatchMovies
         })
-      },
-      // 向服务器发送请求，初始化影片内容
-      initWaitingShowing () {
-        axios.get('http://192.168.3.6:1234/getWaitingMovie')
+      })
+    },
+    // 向服务器发送请求，初始化影片内容
+    initWaitingShowing () {
+      axios.get('http://192.168.3.6:1234/getWaitingMovie')
         .then((response) => {
           this.movies = response.data.waitShowingMovie
           for (var i = 0; i < this.movies.length; i++) {
             let url = this.movies[i].url
-            this.movies[i].url = require('../../'+url+'.jpeg')
+            this.movies[i].url = require('../../' + url + '.jpeg')
           }
         })
-        .catch(function(err){
-          console.error(err);
+        .catch(function (err) {
+          console.error(err)
         })
-      },
-    },
-    created () {
-      // 向服务器发起请求，获取即将上映的影片信息；
-      this.initWaitingShowing()
-    },
-    mounted () {
-      this.showedItem()
     }
+  },
+  created () {
+    // 向服务器发起请求，获取即将上映的影片信息；
+    this.initWaitingShowing()
+  },
+  mounted () {
+    this.showedItem()
   }
+}
 </script>
 <style lang="less">
-
 
   #wait-showing{
     // 设置动画；
@@ -176,8 +175,8 @@
             height: 100%;
             color:white;
             font-size: 1rem;
-            text-align: left;   
-            padding:1rem;       
+            text-align: left;
+            padding:1rem;
           }
         }
         img{

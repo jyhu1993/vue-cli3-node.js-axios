@@ -4,6 +4,7 @@ import Login from './views/Login.vue'
 import Home from './views/Home.vue'
 import Collect from './views/Collect.vue'
 import Order from './views/Order.vue'
+import BuyTicket from './views/BuyTicket.vue'
 
 Vue.use(Router)
 
@@ -45,6 +46,11 @@ export default new Router({
       path: '/order',
       name: 'order',
       component: Order
+    },
+    {
+      path: '/buyTicket',
+      name: 'buyTicket',
+      component: BuyTicket
     }
   ]
 })

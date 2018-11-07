@@ -14,18 +14,18 @@
   </div>
 </template>
 <script>
-  export default {
-    data () {
-      return {
-      }
-    },
-    computed: {
-      wantWatchMovies () {
-        let wantWatchMovies = this.$store.state.wantWatchMovies
-        return wantWatchMovies
-      }
+export default {
+  data () {
+    return {
+    }
+  },
+  computed: {
+    wantWatchMovies () {
+      let wantWatchMovies = this.$store.state.wantWatchMovies
+      return wantWatchMovies
     }
   }
+}
 </script>
 <style lang="less" scoped>
 #collect-page{

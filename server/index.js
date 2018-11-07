@@ -28,6 +28,8 @@ http.createServer(function (request, response) {
       break
     case '/saveWantWatchMovies': saveWantWatchMovies(request, response)
       break
+    case '/submitOrder': submitOrder(request, response)
+      break
   }
 }).listen(1234)
 
@@ -181,5 +183,33 @@ function checkUserInfo (request, response) {
     } else {
       response.end()
     }
+  })
+}
+// 存储用户提交的订单
+function submitOrder (request, response) {
+  var body = ''
+  request.on('data', function (chunk) {
+    body += chunk
+  })
+  request.on('end', function (chunk) {
+    body = JSON.parse(body)
+    let user = body.user
+    fs.readFile(`./user/${user}.json`, function (err, data) {
+      if (err) {
+        console.error(err)
+      }
+      data = JSON.parse(data)
+      if (data.order === undefined) {
+        data.order = []
+      }
+      data.order.push(body)
+      data = JSON.stringify(data, null, '\t')
+      fs.writeFile(`./user/${user}.json`, data, { 'flag': 'w' }, function (err) {
+        if (err) {
+          console.error(err)
+        }
+      })
+    })
+    response.end('save success')
   })
 }
